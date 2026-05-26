@@ -5,9 +5,8 @@
       <!-- Wordmark -->
       <a href="/" class="nav-logo" aria-label="Jordan Holton – home">
         <span class="logo-bracket" aria-hidden="true">[</span>
-        <span class="logo-name">jordan holton</span>
+        <span class="logo-name">jordan.holton</span>
         <span class="logo-bracket" aria-hidden="true">]</span>
-        <span class="logo-cursor" aria-hidden="true">_</span>
       </a>
 
       <!-- Desktop links -->
@@ -82,11 +81,13 @@ export default {
         { href: '/about',    label: 'about',    section: 'about'    },
         { href: '/work',     label: 'work',     section: 'work'     },
         { href: '/skills',   label: 'skills',   section: 'skills'   },
+        { href: '/moments',  label: 'moments',  section: 'moments'  },
       ],
     }
   },
 
   mounted() {
+    this.loadFonts()
     window.addEventListener('scroll', this.onScroll, { passive: true })
     document.addEventListener('keydown', this.onKeyDown)
     this.syncActiveFromPath()
@@ -98,6 +99,22 @@ export default {
   },
 
   methods: {
+    loadFonts() {
+      if (document.getElementById('jetbrains-mono-font')) return
+      const preconnect1 = Object.assign(document.createElement('link'), {
+        rel: 'preconnect', href: 'https://fonts.googleapis.com',
+      })
+      const preconnect2 = Object.assign(document.createElement('link'), {
+        rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous',
+      })
+      const stylesheet = Object.assign(document.createElement('link'), {
+        id: 'jetbrains-mono-font',
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500&display=swap',
+      })
+      document.head.append(preconnect1, preconnect2, stylesheet)
+    },
+
     onScroll() {
       this.isScrolled = window.scrollY > 24
     },
@@ -134,7 +151,6 @@ export default {
 </script>
 
 <style scoped>
-/* ── Tokens ─────────────────────────────────────────────── */
 :root {
   --nav-height: 64px;
   --nav-bg: #0a0a0a;
@@ -172,7 +188,7 @@ export default {
 .nav-inner {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 150px;
   height: 100%;
   display: flex;
   align-items: center;
