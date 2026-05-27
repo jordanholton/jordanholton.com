@@ -5,6 +5,7 @@ import SiteFooter from '@/components/SiteFooter.vue'
 import { ref, onMounted } from 'vue'
 
 const visible = ref(false)
+const photoMissing = ref(false)   // flips true if /images/headshot.jpg doesn't exist yet
 onMounted(() => setTimeout(() => { visible.value = true }, 80))
 </script>
 
@@ -19,13 +20,13 @@ onMounted(() => setTimeout(() => { visible.value = true }, 80))
                     <!-- Header -->
                     <div class="page-header" :class="{ visible }">
                         <p class="section-label"><span class="sl">$</span> cat about.md</p>
-                        <h1 class="page-title">About</h1>
                     </div>
 
                     <!-- Main grid -->
                     <div class="about-grid" :class="{ visible }">
                         <!-- Bio -->
                         <div class="bio-col">
+                            <h1 class="greeting">Hi, I'm Jordan.</h1>
                             <div class="bio-block">
                                 <p class="bio-text">
                                     I'm a systems architect and automation engineer with over a decade of
@@ -83,6 +84,31 @@ onMounted(() => setTimeout(() => { visible.value = true }, 80))
 
                         <!-- Stats sidebar -->
                         <div class="stats-col">
+
+                            <!--
+                                ── Headshot ────────────────────────────────────────
+                                Drop your photo into:  public/images/headshot.jpg
+                                The placeholder below disappears automatically once
+                                the file exists — no code changes needed.
+                                ────────────────────────────────────────────────────
+                            -->
+                            <div class="photo-card">
+                                <img
+                                    v-if="!photoMissing"
+                                    src="/images/headshot.jpg"
+                                    alt="Jordan Holton"
+                                    class="headshot-img"
+                                    @error="photoMissing = true"
+                                />
+                                <div v-else class="headshot-placeholder">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <circle cx="12" cy="8" r="4"/>
+                                        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                                    </svg>
+                                    <p class="placeholder-label">// headshot.jpg</p>
+                                    <p class="placeholder-hint">public/images/headshot.jpg</p>
+                                </div>
+                            </div>
                             <div class="stats-card">
                                 <p class="block-label"><span class="sl">// </span>quick.facts</p>
                                 <div class="stat-rows">
@@ -153,13 +179,14 @@ onMounted(() => setTimeout(() => { visible.value = true }, 80))
 }
 .page-header.visible { opacity: 1; transform: translateY(0); }
 
-.page-title {
+.greeting {
     font-family: var(--font-mono);
-    font-size: clamp(40px, 6vw, 72px);
+    font-size: clamp(32px, 4.5vw, 52px);
     font-weight: 700;
     color: var(--text-strong);
     letter-spacing: -0.02em;
-    line-height: 1.05;
+    line-height: 1.1;
+    margin-bottom: 28px;
 }
 
 /* ── About grid ──────────────────────────────────────────────── */
@@ -219,6 +246,55 @@ onMounted(() => setTimeout(() => { visible.value = true }, 80))
 
 /* Stats sidebar */
 .stats-col { display: flex; flex-direction: column; gap: 16px; }
+
+/* ── Photo card ──────────────────────────────────────────── */
+.photo-card {
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+}
+
+/* Real image — fills the card */
+.headshot-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+}
+
+/* Placeholder shown until headshot.jpg exists */
+.headshot-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 2px dashed var(--border-accent);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    padding: 24px;
+    background-image: radial-gradient(circle at 1px 1px, var(--hero-dot) 1px, transparent 0);
+    background-size: 24px 24px;
+}
+.headshot-placeholder svg { opacity: 0.4; }
+.placeholder-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+}
+.placeholder-hint {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-align: center;
+}
 
 .stats-card, .contact-card {
     background: var(--bg-surface);
