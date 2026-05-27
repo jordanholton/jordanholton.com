@@ -199,7 +199,7 @@ function submit() {
     font-family: var(--font-mono);
     font-size: 32px;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-strong);
     margin-bottom: 48px;
 }
 
@@ -276,7 +276,7 @@ function submit() {
 .toggle-label {
     font-family: var(--font-mono);
     font-size: 13px;
-    color: #fff;
+    color: var(--text-strong);
     display: block;
     margin-bottom: 2px;
 }
@@ -295,7 +295,7 @@ function submit() {
     font-family: var(--font-mono);
     font-size: 13px;
     font-weight: 500;
-    color: #0a0a0a;
+    color: var(--bg);
     background: var(--accent);
     border: none;
     padding: 11px 24px;
@@ -315,7 +315,7 @@ function submit() {
     border: 1px solid var(--border);
     transition: color var(--transition), border-color var(--transition);
 }
-.cancel-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+.cancel-btn:hover { color: var(--text); border-color: var(--border-hover); }
 
 @media (max-width: 768px) {
     .admin-page { grid-template-columns: 1fr; }

@@ -1,9 +1,8 @@
 import { createInertiaApp } from '@inertiajs/vue3';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
-
 createInertiaApp({
-    title: (title) => (title ? `${title} - ${appName}` : appName),
+    // Each page sets its own full title; fall back to the site name only when none is provided.
+    title: (title) => title || 'Jordan Holton',
     progress: {
         color: '#b4f16e',
     },

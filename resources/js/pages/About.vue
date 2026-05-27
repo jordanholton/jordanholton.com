@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
 import TopNav from '@/components/TopNav.vue'
+import SiteFooter from '@/components/SiteFooter.vue'
 import { ref, onMounted } from 'vue'
 
 const visible = ref(false)
@@ -137,13 +138,7 @@ onMounted(() => setTimeout(() => { visible.value = true }, 80))
             </section>
         </main>
 
-        <footer class="site-footer">
-            <div class="container" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-                <span class="footer-logo"><span class="br">[</span>jordan.holton<span class="br">]</span></span>
-                <span class="footer-built">// built with laravel · vue · inertia</span>
-                <a href="mailto:jordan@jordanholton.com" class="footer-email" style="margin-left:auto;">jordan@jordanholton.com</a>
-            </div>
-        </footer>
+        <SiteFooter />
     </div>
 </template>
 
@@ -162,7 +157,7 @@ onMounted(() => setTimeout(() => { visible.value = true }, 80))
     font-family: var(--font-mono);
     font-size: clamp(40px, 6vw, 72px);
     font-weight: 700;
-    color: #fff;
+    color: var(--text-strong);
     letter-spacing: -0.02em;
     line-height: 1.05;
 }
@@ -213,7 +208,7 @@ onMounted(() => setTimeout(() => { visible.value = true }, 80))
 .val-title {
     font-family: var(--font-mono);
     font-size: 13px;
-    color: #fff;
+    color: var(--text-strong);
     margin-bottom: 6px;
 }
 .val-desc {

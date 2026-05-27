@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
 import TopNav from '@/components/TopNav.vue'
+import SiteFooter from '@/components/SiteFooter.vue'
 import { ref, computed, onMounted } from 'vue'
 
 interface Moment {
@@ -106,13 +107,7 @@ function catLabel(cat: string): string {
             </section>
         </main>
 
-        <footer class="site-footer">
-            <div class="container" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-                <span class="footer-logo"><span class="br">[</span>jordan.holton<span class="br">]</span></span>
-                <span class="footer-built">// built with laravel · vue · inertia</span>
-                <a href="mailto:jordan@jordanholton.com" class="footer-email" style="margin-left:auto;">jordan@jordanholton.com</a>
-            </div>
-        </footer>
+        <SiteFooter />
     </div>
 </template>
 
@@ -129,7 +124,7 @@ function catLabel(cat: string): string {
 .page-title {
     font-family: var(--font-mono);
     font-size: clamp(40px, 6vw, 72px);
-    font-weight: 700; color: #fff;
+    font-weight: 700; color: var(--text-strong);
     letter-spacing: -0.02em; line-height: 1.05;
     margin-bottom: 16px;
 }
@@ -157,7 +152,7 @@ function catLabel(cat: string): string {
     cursor: pointer;
     transition: color var(--transition), border-color var(--transition), background var(--transition);
 }
-.filter-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+.filter-btn:hover { color: var(--text); border-color: var(--border-hover); }
 .filter-btn.active {
     color: var(--accent);
     border-color: var(--border-accent);
@@ -236,7 +231,7 @@ function catLabel(cat: string): string {
     font-family: var(--font-mono);
     font-size: 16px;
     font-weight: 500;
-    color: #fff;
+    color: var(--text-strong);
     margin-bottom: 10px;
     line-height: 1.4;
 }

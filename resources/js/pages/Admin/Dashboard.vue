@@ -172,7 +172,7 @@ function catClass(cat: string): string {
 .nav-icon { font-size: 10px; }
 
 .sidebar-user { margin-top: auto; }
-.user-name { font-family: var(--font-mono); font-size: 13px; color: #fff; margin-bottom: 2px; }
+.user-name { font-family: var(--font-mono); font-size: 13px; color: var(--text-strong); margin-bottom: 2px; }
 .user-email { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-bottom: 12px; word-break: break-all; }
 .logout-btn {
     font-family: var(--font-mono);
@@ -187,7 +187,7 @@ function catClass(cat: string): string {
     width: 100%;
 }
 .logout-btn span { color: var(--accent); }
-.logout-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+.logout-btn:hover { color: var(--text); border-color: var(--border-hover); }
 
 /* Main */
 .admin-main { padding: 48px 56px; overflow-y: auto; }
@@ -211,7 +211,7 @@ function catClass(cat: string): string {
     font-family: var(--font-mono);
     font-size: 32px;
     font-weight: 700;
-    color: #fff;
+    color: var(--text-strong);
 }
 
 .create-btn {
@@ -221,7 +221,7 @@ function catClass(cat: string): string {
     font-family: var(--font-mono);
     font-size: 13px;
     font-weight: 500;
-    color: #0a0a0a;
+    color: var(--bg);
     background: var(--accent);
     padding: 10px 20px;
     border-radius: var(--radius);
@@ -286,7 +286,7 @@ function catClass(cat: string): string {
     white-space: nowrap;
 }
 .td-date { color: var(--text-muted); }
-.td-title { color: #fff; }
+.td-title { color: var(--text-strong); }
 
 .cat-badge {
     font-size: 10px;

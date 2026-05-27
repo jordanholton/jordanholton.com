@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
 import TopNav from '@/components/TopNav.vue'
+import SiteFooter from '@/components/SiteFooter.vue'
 import { ref, onMounted } from 'vue'
 
 const visible = ref(false)
@@ -133,13 +134,7 @@ onMounted(() => {
             </section>
         </main>
 
-        <footer class="site-footer">
-            <div class="container" style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-                <span class="footer-logo"><span class="br">[</span>jordan.holton<span class="br">]</span></span>
-                <span class="footer-built">// built with laravel · vue · inertia</span>
-                <a href="mailto:jordan@jordanholton.com" class="footer-email" style="margin-left:auto;">jordan@jordanholton.com</a>
-            </div>
-        </footer>
+        <SiteFooter />
     </div>
 </template>
 
@@ -157,7 +152,7 @@ onMounted(() => {
 .hero-bg {
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(circle at 1px 1px, rgba(180, 241, 110, 0.055) 1px, transparent 0);
+    background-image: radial-gradient(circle at 1px 1px, var(--hero-dot) 1px, transparent 0);
     background-size: 36px 36px;
     pointer-events: none;
 }
@@ -191,7 +186,7 @@ onMounted(() => {
     font-size: clamp(52px, 7vw, 88px);
     font-weight: 700;
     line-height: 1.0;
-    color: #fff;
+    color: var(--text-strong);
     letter-spacing: -0.02em;
     margin-bottom: 12px;
 }
@@ -227,7 +222,7 @@ onMounted(() => {
     font-family: var(--font-mono);
     font-size: 13px;
     font-weight: 500;
-    color: #0a0a0a;
+    color: var(--bg);
     background: var(--accent);
     padding: 10px 20px;
     border-radius: var(--radius);
@@ -378,7 +373,7 @@ onMounted(() => {
     font-family: var(--font-mono);
     font-size: 13px;
     font-weight: 500;
-    color: #fff;
+    color: var(--text-strong);
     margin-bottom: 12px;
     letter-spacing: 0.02em;
 }

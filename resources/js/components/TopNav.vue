@@ -23,8 +23,33 @@
         </li>
       </ul>
 
-      <!-- CTA -->
-      <a href="mailto:hello@jordanholton.com" class="nav-cta" aria-label="Contact Jordan">
+      <!-- Theme toggle (always visible) -->
+      <button
+        class="theme-toggle"
+        :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+        :title="isDark ? 'Light mode' : 'Dark mode'"
+        @click="toggle"
+      >
+        <!-- Sun — click to switch to light -->
+        <svg v-if="isDark" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <!-- Moon — click to switch to dark -->
+        <svg v-else xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+
+      <!-- Desktop CTA -->
+      <a href="mailto:jordan@jordanholton.com" class="nav-cta" aria-label="Contact Jordan">
         <span class="cta-dollar" aria-hidden="true">$</span>
         contact
       </a>
@@ -43,33 +68,63 @@
       </button>
     </nav>
 
-    <!-- Mobile menu -->
-    <transition name="slide">
-      <div v-if="menuOpen" id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation menu">
-        <ul role="list">
-          <li v-for="(link, i) in navLinks" :key="link.href" :style="{ animationDelay: `${i * 60}ms` }" class="mobile-link-item">
-            <a
-              :href="link.href"
-              class="mobile-link"
-              :class="{ active: activeSection === link.section }"
-              @click="handleMobileNav(link.section)"
-            >
-              <span class="mobile-link-num" aria-hidden="true">{{ String(i + 1).padStart(2, '0') }}</span>
-              {{ link.label }}
-            </a>
-          </li>
-        </ul>
-        <a href="mailto:hello@jordanholton.com" class="mobile-cta" @click="menuOpen = false">
-          <span aria-hidden="true">$ </span>contact --email
-        </a>
+    <!-- Mobile backdrop -->
+    <transition name="backdrop">
+      <div
+        v-if="menuOpen"
+        class="mobile-backdrop"
+        aria-hidden="true"
+        @click="toggleMenu"
+      ></div>
+    </transition>
+
+    <!-- Mobile drawer -->
+    <transition name="drawer">
+      <div v-if="menuOpen" id="mobile-menu" class="mobile-drawer" role="dialog" aria-modal="true" aria-label="Navigation menu">
+        <!-- Drawer header -->
+        <div class="drawer-header">
+          <span class="drawer-logo">
+            <span class="logo-bracket">[</span>jordan.holton<span class="logo-bracket">]</span>
+          </span>
+          <button class="drawer-close" aria-label="Close menu" @click="toggleMenu">✕</button>
+        </div>
+
+        <!-- Links -->
+        <nav class="drawer-nav">
+          <a
+            v-for="(link, i) in navLinks"
+            :key="link.href"
+            :href="link.href"
+            class="drawer-link"
+            :class="{ active: activeSection === link.section }"
+            :style="{ animationDelay: `${i * 40}ms` }"
+            @click="handleMobileNav(link.section)"
+          >
+            <span class="drawer-prefix" aria-hidden="true">./</span>{{ link.label }}
+          </a>
+        </nav>
+
+        <!-- Contact CTA -->
+        <div class="drawer-footer">
+          <a href="mailto:jordan@jordanholton.com" class="drawer-cta" @click="menuOpen = false">
+            <span class="cta-dollar" aria-hidden="true">$</span> contact --email
+          </a>
+        </div>
       </div>
     </transition>
   </header>
 </template>
 
 <script>
+import { useTheme } from '@/composables/useTheme'
+
 export default {
   name: 'TopNav',
+
+  setup() {
+    const { isDark, toggle } = useTheme()
+    return { isDark, toggle }
+  },
 
   data() {
     return {
@@ -77,11 +132,11 @@ export default {
       menuOpen: false,
       activeSection: 'overview',
       navLinks: [
-        { href: '/',         label: 'overview', section: 'overview' },
-        { href: '/about',    label: 'about',    section: 'about'    },
-        { href: '/work',     label: 'work',     section: 'work'     },
-        { href: '/skills',   label: 'skills',   section: 'skills'   },
-        { href: '/moments',  label: 'moments',  section: 'moments'  },
+        { href: '/',        label: 'overview', section: 'overview' },
+        { href: '/about',   label: 'about',    section: 'about'   },
+        { href: '/work',    label: 'work',     section: 'work'    },
+        { href: '/skills',  label: 'skills',   section: 'skills'  },
+        { href: '/moments', label: 'moments',  section: 'moments' },
       ],
     }
   },
@@ -151,56 +206,43 @@ export default {
 </script>
 
 <style scoped>
-:root {
-  --nav-height: 64px;
-  --nav-bg: #0a0a0a;
-  --nav-bg-scrolled: rgba(10, 10, 10, 0.92);
-  --nav-border: rgba(255, 255, 255, 0.08);
-  --nav-text: #c8c8c0;
-  --nav-muted: #5a5a52;
-  --nav-accent: #b4f16e;       /* terminal green */
-  --nav-accent-dim: rgba(180, 241, 110, 0.12);
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
-  --font-sans: 'DM Sans', 'Inter', system-ui, sans-serif;
-  --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ── Base ───────────────────────────────────────────────── */
+/* ── Base ────────────────────────────────────────────────────────── */
 .nav-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 200;
   height: var(--nav-height);
-  background: var(--nav-bg);
+  background: var(--bg);
   border-bottom: 1px solid transparent;
-  transition: border-color var(--transition), background var(--transition), backdrop-filter var(--transition);
+  transition: border-color 200ms ease, background 200ms ease, backdrop-filter 200ms ease;
 }
 
 .nav-header.scrolled {
-  background: var(--nav-bg-scrolled);
-  border-bottom-color: var(--nav-border);
+  background: var(--nav-scrolled-bg);
+  border-bottom-color: var(--border);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
 
+/* ── Inner: aligned with .container (max-w 1120px, px-6) ──────── */
 .nav-inner {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 0 150px;
+  padding: 0 24px;
   height: 100%;
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 28px;
 }
 
-/* ── Logo ───────────────────────────────────────────────── */
+/* ── Logo ────────────────────────────────────────────────────────── */
 .nav-logo {
   font-family: var(--font-mono);
   font-size: 14px;
   font-weight: 500;
-  color: var(--nav-text);
+  color: var(--text);
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -208,38 +250,18 @@ export default {
   letter-spacing: 0.01em;
   margin-right: auto;
   flex-shrink: 0;
-  transition: color var(--transition);
+  transition: color 200ms ease;
 }
+.nav-logo:hover { color: var(--text); opacity: 0.8; }
 
-.nav-logo:hover {
-  color: #fff;
-}
+.logo-bracket { color: var(--accent); font-weight: 700; }
+.logo-name    { color: inherit; }
 
-.logo-bracket {
-  color: var(--nav-accent);
-  font-weight: 700;
-}
-
-.logo-name {
-  color: inherit;
-}
-
-.logo-cursor {
-  color: var(--nav-accent);
-  animation: blink 1.1s step-end infinite;
-  margin-left: 1px;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
-}
-
-/* ── Desktop nav links ──────────────────────────────────── */
+/* ── Desktop links ───────────────────────────────────────────────── */
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -247,53 +269,68 @@ export default {
 
 .nav-link {
   font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--nav-muted);
+  font-size: 12.5px;
+  color: var(--text-muted);
   text-decoration: none;
-  padding: 6px 12px;
+  padding: 6px 10px;
   border-radius: 6px;
   border: 1px solid transparent;
   display: flex;
   align-items: center;
-  gap: 0;
-  transition: color var(--transition), background var(--transition), border-color var(--transition);
+  transition: color 200ms ease, background 200ms ease, border-color 200ms ease;
   white-space: nowrap;
 }
-
 .link-prefix {
   color: transparent;
-  transition: color var(--transition);
-  font-size: 11px;
-  margin-right: 2px;
+  font-size: 10px;
+  margin-right: 1px;
+  transition: color 200ms ease;
 }
-
 .nav-link:hover {
-  color: var(--nav-text);
-  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  background: var(--hover-surface);
 }
-
-.nav-link:hover .link-prefix {
-  color: var(--nav-accent);
-}
-
+.nav-link:hover .link-prefix { color: var(--accent); }
 .nav-link.active {
-  color: var(--nav-accent);
-  background: var(--nav-accent-dim);
-  border-color: rgba(180, 241, 110, 0.2);
+  color: var(--accent);
+  background: var(--accent-dim);
+  border-color: var(--border-accent);
 }
+.nav-link.active .link-prefix { color: var(--accent); }
 
-.nav-link.active .link-prefix {
-  color: var(--nav-accent);
+/* ── Theme toggle ────────────────────────────────────────────────── */
+.theme-toggle {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 200ms ease, border-color 200ms ease, background 200ms ease;
 }
+.theme-toggle:hover {
+  color: var(--accent);
+  border-color: var(--border-accent);
+  background: var(--accent-dim);
+}
+.theme-toggle svg {
+  transition: transform 0.35s ease;
+  display: block;
+}
+.theme-toggle:hover svg { transform: rotate(18deg); }
 
-/* ── CTA ────────────────────────────────────────────────── */
+/* ── CTA ─────────────────────────────────────────────────────────── */
 .nav-cta {
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
-  color: #0a0a0a;
-  background: var(--nav-accent);
+  color: var(--bg);
+  background: var(--accent);
   text-decoration: none;
   padding: 7px 16px;
   border-radius: 6px;
@@ -302,26 +339,17 @@ export default {
   gap: 5px;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  transition: background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
 }
-
 .nav-cta:hover {
-  background: #c8f890;
   transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(180, 241, 110, 0.3);
+  box-shadow: 0 4px 20px var(--accent-glow);
+  filter: brightness(1.08);
 }
+.nav-cta:active { transform: translateY(0); box-shadow: none; }
+.cta-dollar { opacity: 0.6; font-weight: 700; }
 
-.nav-cta:active {
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-.cta-dollar {
-  opacity: 0.6;
-  font-weight: 700;
-}
-
-/* ── Hamburger ──────────────────────────────────────────── */
+/* ── Hamburger ───────────────────────────────────────────────────── */
 .nav-toggle {
   display: none;
   flex-direction: column;
@@ -330,126 +358,164 @@ export default {
   width: 36px;
   height: 36px;
   background: none;
-  border: 1px solid var(--nav-border);
+  border: 1px solid var(--border);
   border-radius: 6px;
   cursor: pointer;
   padding: 8px;
   flex-shrink: 0;
 }
-
 .hamburger-line {
   display: block;
   width: 100%;
   height: 1.5px;
-  background: var(--nav-text);
+  background: var(--text);
   border-radius: 2px;
-  transition: transform var(--transition), opacity var(--transition);
+  transition: transform 200ms ease, opacity 200ms ease;
   transform-origin: center;
 }
-
 .hamburger-line:nth-child(1).open { transform: translateY(6.5px) rotate(45deg); }
 .hamburger-line:nth-child(2).open { opacity: 0; transform: scaleX(0); }
 .hamburger-line:nth-child(3).open { transform: translateY(-6.5px) rotate(-45deg); }
 
-/* ── Mobile menu ────────────────────────────────────────── */
-.mobile-menu {
+/* ── Mobile backdrop ─────────────────────────────────────────────── */
+.mobile-backdrop {
   position: fixed;
-  inset: var(--nav-height) 0 0 0;
-  background: var(--nav-bg);
-  padding: 32px 24px 48px;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 190;
+  cursor: pointer;
+}
+
+/* ── Mobile drawer ───────────────────────────────────────────────── */
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(300px, 85vw);
+  background: var(--bg-surface);
+  border-left: 1px solid var(--border);
+  z-index: 250;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  border-top: 1px solid var(--nav-border);
+  overscroll-behavior: contain;
 }
 
-.mobile-menu ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.mobile-link-item {
-  animation: fadeUp 0.25s ease both;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.mobile-link {
-  font-family: var(--font-mono);
-  font-size: 22px;
-  font-weight: 400;
-  color: var(--nav-muted);
-  text-decoration: none;
+.drawer-header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--nav-border);
-  transition: color var(--transition);
+  justify-content: space-between;
+  padding: 0 20px;
+  height: var(--nav-height);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
 }
-
-.mobile-link:hover,
-.mobile-link.active {
-  color: var(--nav-accent);
+.drawer-logo {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
 }
-
-.mobile-link-num {
+.drawer-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
   font-size: 12px;
-  color: var(--nav-muted);
-  letter-spacing: 0.05em;
-  min-width: 24px;
+  cursor: pointer;
+  transition: color 200ms ease, border-color 200ms ease;
 }
+.drawer-close:hover { color: var(--text); border-color: var(--border-hover); }
 
-.mobile-link.active .mobile-link-num {
-  color: var(--nav-accent);
-  opacity: 0.7;
+.drawer-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px;
+  gap: 2px;
+  flex: 1;
 }
-
-.mobile-cta {
+.drawer-link {
   font-family: var(--font-mono);
   font-size: 14px;
-  color: var(--nav-accent);
+  color: var(--text-muted);
   text-decoration: none;
-  margin-top: auto;
-  padding-top: 32px;
-  transition: opacity var(--transition);
+  padding: 12px 12px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  transition: color 200ms ease, background 200ms ease, border-color 200ms ease;
+  animation: fadeInLink 0.2s ease both;
 }
-
-.mobile-cta:hover { opacity: 0.75; }
-
-/* ── Slide transition ───────────────────────────────────── */
-.slide-enter-active,
-.slide-leave-active {
-  transition: opacity 0.22s ease, transform 0.22s ease;
+@keyframes fadeInLink {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
-
-.slide-enter-from,
-.slide-leave-to {
-  opacity: 0;
-  transform: translateY(-8px);
+.drawer-prefix {
+  color: transparent;
+  font-size: 11px;
+  margin-right: 3px;
+  transition: color 200ms ease;
 }
+.drawer-link:hover {
+  color: var(--text);
+  background: var(--hover-surface);
+}
+.drawer-link:hover .drawer-prefix { color: var(--accent); }
+.drawer-link.active {
+  color: var(--accent);
+  background: var(--accent-dim);
+  border-color: var(--border-accent);
+}
+.drawer-link.active .drawer-prefix { color: var(--accent); }
 
-/* ── Responsive ─────────────────────────────────────────── */
-@media (max-width: 768px) {
+.drawer-footer {
+  padding: 16px 20px 32px;
+  border-top: 1px solid var(--border);
+}
+.drawer-cta {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--bg);
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 16px;
+  border-radius: 6px;
+  transition: filter 200ms ease;
+}
+.drawer-cta:hover { filter: brightness(1.08); }
+
+/* ── Backdrop transition ─────────────────────────────────────────── */
+.backdrop-enter-active, .backdrop-leave-active { transition: opacity 0.25s ease; }
+.backdrop-enter-from, .backdrop-leave-to { opacity: 0; }
+
+/* ── Drawer slide transition ─────────────────────────────────────── */
+.drawer-enter-active  { transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.28s ease; }
+.drawer-leave-active  { transition: transform 0.22s cubic-bezier(0.4, 0, 1, 1), opacity 0.22s ease; }
+.drawer-enter-from, .drawer-leave-to { transform: translateX(100%); opacity: 0.6; }
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 960px) {
   .nav-links,
-  .nav-cta {
-    display: none;
-  }
-
+  .nav-cta { display: none; }
   .nav-toggle {
     display: flex;
-    margin-left: auto;
   }
+  /* On mobile: logo | [gap] | theme-toggle | hamburger */
+  .nav-logo { margin-right: 0; }
+  .theme-toggle { margin-left: auto; }
+}
 
-  .nav-logo {
-    margin-right: 0;
-  }
+@media (max-width: 480px) {
+  .drawer-link { padding: 14px 12px; font-size: 15px; }
 }
 </style>

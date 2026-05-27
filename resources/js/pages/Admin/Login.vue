@@ -190,7 +190,7 @@ function submit() {
     justify-content: center;
     gap: 6px;
     background: var(--accent);
-    color: #0a0a0a;
+    color: var(--bg);
     font-family: var(--font-mono);
     font-size: 13px;
     font-weight: 500;
